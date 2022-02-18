@@ -1,0 +1,87 @@
+{
+  "name": "vue-textarea-autosize",
+  "description": "Vue component provides textarea with automatically adjustable height and without any wrappers and dependencies",
+  "version": "1.1.1",
+  "author": {
+    "name": "Saymon",
+    "email": "saymon.biz@gmail.com"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "demo": "vue-cli-service demo",
+    "docs": "npm run docs:serve",
+    "docs:build": "vue-cli-service docs --mode build",
+    "docs:serve": "vue-cli-service docs --mode serve",
+    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build",
+    "start": "vue-cli-service serve"
+  },
+  "main": "dist/vue-textarea-autosize.common.js",
+  "module": "dist/vue-textarea-autosize.esm.js",
+  "unpkg": "dist/vue-textarea-autosize.umd.min.js",
+  "files": [
+    "dist/vue-textarea-autosize.common.js",
+    "dist/vue-textarea-autosize.umd.min.js",
+    "dist/vue-textarea-autosize.umd.js",
+    "dist/vue-textarea-autosize.esm.js",
+    "src"
+  ],
+  "dependencies": {
+    "core-js": "^2.6.5"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-cli-plugin-p11n": "^0.4.0",
+    "vue-template-compiler": "^2.6.10",
+    "vue": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "jsdelivr": "dist/textarea-autosize.umd.min.js",
+  "sideeffects": false,
+  "keywords": [
+    "vue",
+    "vuejs",
+    "plugin",
+    "textarea",
+    "size",
+    "auto",
+    "autosize",
+    "height"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devstark-com/vue-textarea-autosize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devstark-com/vue-textarea-autosize/issues"
+  }
+}
