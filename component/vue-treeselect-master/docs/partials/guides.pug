@@ -1,0 +1,138 @@
++section('Guides')
+
++subsection('Basic Features')
+  :markdown-it
+    This example demonstrates the most commonly-used features of vue-treeselect. Try the fuzzy matching functionality by typing a few letters.
+  +demo('BasicFeatures')
+  :markdown-it
+    The first thing you need to learn is how to define options. There are two types of options: **a. folder options** that are foldable & *may* have children options, and **b. normal options** that aren't & don't. Here, I'd like to borrow the basic concepts from Computer Science and call the former as *branch nodes* & the latter as *leaf nodes*. These two kinds of nodes together compose the tree.
+
+    Defining leaf nodes is quite simple:
+
+    ```js
+    {
+      id: '<id>', // used to identify the option within the tree so its value must be unique across all options
+      label: '<label>', // used to display the option
+    }
+    ```
+
+    Defining branch nodes only needs an extra `children` property:
+
+    ```js
+    {
+      id: '<id>',
+      label: '<label>',
+      children: [
+        {
+          id: '<child id>',
+          label: '<child label>',
+        },
+        ...
+      ],
+    }
+    ```
+
+    Then you can pass an array of these nodes as the `options` prop. Note that, even if you assign an empty array to the `children` property, it's still considered to be a branch node. This is likely different from what you've learnt from Computer Science, in which a node with no children is commonly known as a leaf node.
+
+    For information on all available properties in a `node` object, see [below](#node).
+
++subsection('More Features')
+  :markdown-it
+    This demonstrates more features.
+  +demo('MoreFeatures')
+
++subsection('Delayed Loading')
+  :markdown-it
+    If you have a large number of deeply nested options, you might want to load options only of the most top levels on initial load, and load the rest only when needed. You can achieve that by following these steps:
+
+      1. Declare an *unloaded* branch node by setting `children: null`
+      2. Add `loadOptions` prop
+      3. Whenever an unloaded branch node gets expanded, `loadOptions({ action, parentNode, callback, instanceId })` will be called, then you can perform the job requesting data from a remote server
+  +demo('DelayedLoading')
+  :markdown-it
+    It's also possible to have root level options to be delayed loaded. If no options have been initially registered (`options: null`), vue-treeselect will attempt to load root options by calling `loadOptions({ action, callback, instanceId })` after the component is mounted. In this example I have disabled the auto loading feature by setting `autoLoadRootOptions: false`, and the root options will be loaded when the menu is opened.
+  +demo('DelayedRootOptions')
+
++subsection('Async Searching')
+  :markdown-it
+    vue-treeselect supports dynamically loading & changing the entire options list as the user types. By default, vue-treeselect will cache the result of each AJAX request, thus the user could wait less.
+  +demo('AsyncSearching')
+
++subsection('Flat Mode & Sort Values')
+  :markdown-it
+    In all previous examples, we used the default non-flat mode of vue-treeselect, which means:
+
+      1. Whenever a branch node gets checked, all its children will be checked too
+      2. Whenever a branch node has all children checked, the branch node itself will be checked too
+
+    Sometimes we don't need that mechanism, and want branch nodes & leaf nodes don't affect each other. In this case, flat mode should be used, as demonstrated in the following.
+
+    If you want to control the order in which selected options to be displayed, use the `sortValueBy` prop. This prop has three options:
+
+      - `"ORDER_SELECTED"` (default) - Order selected
+      - `"LEVEL"` - Level of option: C 🡒 BB 🡒 AAA
+      - `"INDEX"` - Index of option: AAA 🡒 BB 🡒 C
+  +demo('FlatModeAndSortValues')
+
++subsection('Prevent Value Combining')
+  :markdown-it
+    For non-flat & multi-select mode, if a branch node and its all descendants are checked, vue-treeselect will combine them into a single item in the value array, as demonstrated in the following example. By using `valueConsistsOf` prop you can change that behavior. This prop has four options:
+
+      - `"ALL"` - Any node that is checked will be included in the `value` array
+      - `"BRANCH_PRIORITY"` (default) - If a branch node is checked, all its descendants will be excluded in the `value` array
+      - `"LEAF_PRIORITY"` - If a branch node is checked, this node itself and its branch descendants will be excluded from the `value` array but its leaf descendants will be included
+      - `"ALL_WITH_INDETERMINATE"` - Any node that is checked will be included in the `value` array, plus indeterminate nodes
+  +demo('PreventValueCombining')
+
++subsection('Disable Branch Nodes')
+  :markdown-it
+    Set `disableBranchNodes: true` to make branch nodes uncheckable and treat them as collapsible folders only. You may also want to show a count next to the label of each branch node by setting `showCount: true`.
+  +demo('DisableBranchNodes')
+
++subsection('Flatten Search Results')
+  :markdown-it
+    Set `flattenSearchResults: true` to flatten the tree when searching. With this option set to `true`, only the results that match will be shown. With this set to `false` (default), its ancestors will also be displayed, even if they would not individually be included in the results.
+  +demo('FlattenSearchResults')
+
++subsection('Disable Item Selection')
+  :markdown-it
+    You can disable item selection by setting `isDisabled: true` on any leaf node or branch node. For non-flat mode, setting on a branch node will disable all its descendants as well.
+  +demo('DisableItemSelection')
+
++subsection('Nested Search')
+  :markdown-it
+    Sometimes we need the possibility to search options within a specific branch. For example your branches are different restaurants and the leafs are the foods they order. To search for the salad order of "McDonals" restaurant, just search for **"mc salad"**. You can also try searching **"salad"** to feel the difference.
+
+    Concretely speaking, your search query gets split on spaces. If each splitted string is found within the path to the node, then we have a match.
+  +demo('NestedSearch')
+  p.tip
+    :markdown-it(inline=true)
+      Fuzzy matching functionality is disabled for this mode to avoid mismatching.
+
++subsection('Customize Key Names')
+  :markdown-it
+    If your data of options is loaded via AJAX and have a different data structure than what vue-treeselect asks, e.g. your data has `name` property but vue-treeselect needs `label`, you may want to customize the key names. In this case, you can provide a function prop called `normalizer` which will be passed every node in the tree during data initialization. Use this function to create and return the transformed object.
+  +demo('CustomizeKeyNames')
+
++subsection('Customize Option Label')
+  :markdown-it
+    You can customize the label of each option. vue-treeselect utilizes Vue's [scoped slot](https://vuejs.org/v2/guide/components.html#Scoped-Slots) feature and provides some props you should use in your customized template:
+
+    - `node` - a normalized node object (note that, this is differnt from what you return from `normalizer()` prop)
+    - `count` & `shouldShowCount` - the count number and a boolean indicates whether the count should be displayed
+    - `labelClassName` & `countClassName` - CSS classnames for making the style correct
+  +demo('CustomizeOptionLabel')
+
++subsection('Customize Value Label')
+  :markdown-it
+    You can customize the label of value item (each item in case of multi-select). vue-treeselect utilizes Vue's [scoped slot](https://vuejs.org/v2/guide/components.html#Scoped-Slots) feature and provides some props you should use in your customized template:
+
+    - `node` - a normalized node object (note that, this is differnt from what you return from `normalizer()` prop)
+  +demo('CustomizeValueLabel')
+
++subsection('Vuex Support')
+  :markdown-it
+      In all previous examples, we used `v-model` to sync value between application state and vue-treeselect, a.k.a two-way data binding. If you are using Vuex, we could make use of `:value` and `@input`, since `v-model` is just a syntax sugar for them in Vue 2.
+
+      Concretely speaking, we can bind `getter` to `:value` to make vue-treeselect reflect any changes in your Vuex state, and bind `action` or `mutation` to `@input` to update your Vuex state whenever the value changes.
+  +demo('VuexSupport')
